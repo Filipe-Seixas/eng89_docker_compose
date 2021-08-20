@@ -1,18 +1,26 @@
-version: '3.8'
+version: '3'
 
+
+# image of mongod and port 27017
 services:
-  # start the db image and map to port 27017
   db:
     image: mongo
     restart: always
     ports: [27017:27017]
 
+    #volumes:
+    #  - 'db:/data/db'
+    volumes:
+
+      - ./mongod.conf:/etc/mongod.conf
+
+# web app image and reverse proxy
   web:
-    # start up the web app image and map to localhost
-    build: .
+    build: ./app
     restart: always
     ports: [80:3000]
-    # set variable for db port
+
+# environment variable
     environment:
       - DB_HOST=mongodb://db:27017/posts
     depends_on:
